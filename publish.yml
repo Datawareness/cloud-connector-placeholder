@@ -1,0 +1,32 @@
+# GitHub Actions workflow for the Datawareness/cloud-connector-placeholder repo.
+# In that repo this file must live at: .github/workflows/publish.yml
+# (It does nothing here — this is just the version-controlled source copy.)
+name: Publish placeholder image
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ghcr.io/datawareness/cloud-connector-placeholder:1
